@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/slate200"
+    tools:ignore="SpeakableTextPresentCheck">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="392dp"
+            android:layout_height="662dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView21"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialToolbar2"
+            app:layout_constraintVertical_bias="0.107"
+            app:srcCompat="@drawable/imglheart" />
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/materialToolbar2"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:background="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btnRegP2Back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/reg2_back_Text"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/materialToolbar2"
+            app:layout_constraintTop_toTopOf="@+id/materialToolbar2" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reg2_register_Text"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/materialToolbar2"
+            app:layout_constraintEnd_toEndOf="@+id/materialToolbar2"
+            app:layout_constraintStart_toStartOf="@+id/materialToolbar2"
+            app:layout_constraintTop_toTopOf="@+id/materialToolbar2" />
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/materialToolbar4"
+            android:layout_width="370dp"
+            android:layout_height="800dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/custom_toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.487"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialToolbar2"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/reg2_height_cm_Text"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/materialToolbar4"
+            app:layout_constraintTop_toTopOf="@+id/materialToolbar4" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/reg2_weight_kg_Text"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/inputHeight"
+            app:layout_constraintTop_toBottomOf="@+id/inputHeight" />
+
+        <EditText
+            android:id="@+id/inputHeight"
+            android:layout_width="335dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="@string/inputHeight"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintStart_toStartOf="@+id/textView14"
+            app:layout_constraintTop_toBottomOf="@+id/textView14"
+            tools:ignore="TextContrastCheck" />
+
+        <EditText
+            android:id="@+id/inputWeight"
+            android:layout_width="335dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="@string/reg2_weightkg_TextInput"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintStart_toStartOf="@+id/textView17"
+            app:layout_constraintTop_toBottomOf="@+id/textView17"
+            tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/Reg2_goal_weight_kg_Text"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/inputWeight"
+            app:layout_constraintTop_toBottomOf="@+id/inputWeight" />
+
+        <EditText
+            android:id="@+id/inputGWeight"
+            android:layout_width="335dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="@string/reg2_GWkg_TextInput"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintStart_toStartOf="@+id/textView18"
+            app:layout_constraintTop_toBottomOf="@+id/textView18"
+            tools:ignore="TextContrastCheck" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/reg2_ins_Text"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/inputGWeight"
+            app:layout_constraintTop_toBottomOf="@+id/inputGWeight" />
+
+        <CheckBox
+            android:id="@+id/cboxMilk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_milk_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/textView19"
+            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+        <CheckBox
+            android:id="@+id/cboxNuts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_nuts_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxMilk"
+            app:layout_constraintTop_toBottomOf="@+id/cboxMilk" />
+
+        <CheckBox
+            android:id="@+id/cboxPeanuts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_peanuts_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxNuts"
+            app:layout_constraintTop_toBottomOf="@+id/cboxNuts" />
+
+        <CheckBox
+            android:id="@+id/cboxSoy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_soyCheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxPeanuts"
+            app:layout_constraintTop_toBottomOf="@+id/cboxPeanuts" />
+
+        <CheckBox
+            android:id="@+id/cboxShrimp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_shrimp_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxSoy"
+            app:layout_constraintTop_toBottomOf="@+id/cboxSoy" />
+
+        <CheckBox
+            android:id="@+id/cboxGluten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_gluten_CheckBox"
+            app:layout_constraintEnd_toEndOf="@+id/textView19"
+            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+        <CheckBox
+            android:id="@+id/cboxCelery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_celery_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxGluten"
+            app:layout_constraintTop_toBottomOf="@+id/cboxGluten" />
+
+        <CheckBox
+            android:id="@+id/cboxEggs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_eggs_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxSesameSeed"
+            app:layout_constraintTop_toBottomOf="@+id/cboxSesameSeed" />
+
+        <CheckBox
+            android:id="@+id/cboxSesameSeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_sesame_seeds_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxCelery"
+            app:layout_constraintTop_toBottomOf="@+id/cboxCelery" />
+
+        <CheckBox
+            android:id="@+id/cboxFish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reg2_fish_CheckBox"
+            app:layout_constraintStart_toStartOf="@+id/cboxEggs"
+            app:layout_constraintTop_toBottomOf="@+id/cboxEggs" />
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/reg2_others_Text"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/cboxShrimp"
+            app:layout_constraintTop_toBottomOf="@+id/cboxShrimp" />
+
+        <EditText
+            android:id="@+id/inputSpecify"
+            android:layout_width="335dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="@string/reg2_please_specify_TextInput"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintStart_toStartOf="@+id/textView20"
+            app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/reg2_termofservice_text"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/inputSpecify"
+            app:layout_constraintStart_toStartOf="@+id/inputSpecify"
+            app:layout_constraintTop_toBottomOf="@+id/inputSpecify" />
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/reg2_register_Btn"
+            app:layout_constraintEnd_toEndOf="@+id/materialToolbar4"
+            app:layout_constraintStart_toStartOf="@+id/materialToolbar4"
+            app:layout_constraintTop_toBottomOf="@+id/materialToolbar4" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
