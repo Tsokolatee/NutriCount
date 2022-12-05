@@ -71,5 +71,12 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="imgdlogo">imgDLogo</string>
+    <string name="btncamerabg">btnCameraBG</string>
+    <string name="btncameralogo">btnCameraLogo</string>
+    <string name="progress">Progress</string>
+    <string name="planner">Planner</string>
+    <string name="profile">Profile</string>
 
 </resources>

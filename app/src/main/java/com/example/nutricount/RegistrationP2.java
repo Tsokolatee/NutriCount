@@ -7,39 +7,34 @@ import android.view.View;
 import android.os.Bundle;
 import android.widget.*;
 
-public class RegistrationP2 extends AppCompatActivity implements View.OnClickListener {
+public class RegistrationP2 extends AppCompatActivity {
     private Button btnRegister;
     private TextView btnRegP2Back;
+
+    private View.OnClickListener goBack = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startActivity(new Intent(RegistrationP2.this, RegistrationP1.class));
+        }
+    };
+
+    private View.OnClickListener goRegister = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startActivity(new Intent(RegistrationP2.this, Verification.class));
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registerp2);
 
-        btnRegister = (Button) findViewById(R.id.btnRegister);
-        btnRegister.setOnClickListener(this);
-
         btnRegP2Back = (TextView) findViewById(R.id.btnRegP2Back);
-        btnRegP2Back.setOnClickListener(this);
-    }
+        btnRegP2Back.setOnClickListener(goBack);
 
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-
-            case R.id.btnRegister:
-                startActivity(new Intent(RegistrationP2.this, Verification.class));
-                break;
-
-            case R.id.btnRegP2Back:
-                startActivity(new Intent(RegistrationP2.this, RegistrationP1.class));
-                break;
-
-            default:
-                break;
-        }
-
+        btnRegister = (Button) findViewById(R.id.btnRegister);
+        btnRegister.setOnClickListener(goRegister);
     }
 
     @Override
