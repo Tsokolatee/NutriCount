@@ -23,7 +23,8 @@
             android:exported="false" />
         <activity
             android:name=".Result"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Camera"/>
         <activity
             android:name=".Camera"
             android:exported="false" />
@@ -38,7 +39,8 @@
             android:exported="false" />
         <activity
             android:name=".RegistrationP2"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".RegistrationP1"/>
         <activity
             android:name=".RegistrationP1"
             android:exported="false" />
@@ -47,7 +49,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

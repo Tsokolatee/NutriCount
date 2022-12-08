@@ -11,29 +11,40 @@ public class RegistrationP1 extends AppCompatActivity {
     private TextView btnBack;
     private Button btnNext;
 
-    private View.OnClickListener goBack = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            startActivity(new Intent(RegistrationP1.this, LogIn.class));
-        }
-    };
-
-    private View.OnClickListener goNext = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            startActivity(new Intent(RegistrationP1.this, RegistrationP2.class));
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registerp1);
+        // handle caught data
 
         btnBack = (TextView) findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(goBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBack();
+            }
+        });
 
         btnNext = (Button) findViewById(R.id.btnNext);
-        btnNext.setOnClickListener(goNext);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // migrate data to next activity
+                Intent intent = new Intent(RegistrationP1.this, RegistrationP2.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        goBack();
+    }
+
+    private void goBack() {
+        Intent intent = new Intent(RegistrationP1.this, LogIn.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -17,8 +17,10 @@ public class Result extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
         Bundle extras = getIntent().getExtras();
         String capturedImgFilename = extras.getString("imgFilename");
+
         try {
             FileInputStream is = this.openFileInput(capturedImgFilename);
             bmp = BitmapFactory.decodeStream(is);
@@ -26,6 +28,7 @@ public class Result extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         imgvwCaptured = (ImageView) findViewById(R.id.imgvwCaptured);
         imgvwCaptured.setImageBitmap(bmp);
     }
