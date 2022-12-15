@@ -3,7 +3,6 @@ package com.example.nutricount;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -19,7 +18,6 @@ import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -52,13 +50,17 @@ public class Camera extends AppCompatActivity {
     }
 
     // Camera Variables
+    // for creating preview
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
-    private static final int REQUEST_CAMERA_PERMISSION = 200;
+
     private CameraManager manager;
     private String cameraID;
+    private CameraCharacteristics characteristics;
+
     private boolean isTorchOn;
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
 
     // Handler Variables
     private Handler backgroundHandler;
@@ -68,11 +70,18 @@ public class Camera extends AppCompatActivity {
     private Size imageDimension;
     private String capturedImgFilename;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        try {
+            cameraID = manager.getCameraIdList()[0];
+            characteristics = manager.getCameraCharacteristics(cameraID);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
 
         // Close Button bind
         ImageView btnClose = findViewById(R.id.btnClose);
@@ -88,6 +97,7 @@ public class Camera extends AppCompatActivity {
         if (btnShutter != null)
             btnShutter.setOnClickListener(view -> takePicture());
 
+        // Camera Flash bind
         ImageView btnFlash = findViewById(R.id.btnFlash);
         btnFlash.setOnClickListener(view -> toggleTorch());
     }
@@ -136,9 +146,6 @@ public class Camera extends AppCompatActivity {
     private void openCamera() {
         try {
             // Choose which camera, then get its dimension
-            manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-            cameraID = manager.getCameraIdList()[0];
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraID);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
 
@@ -200,9 +207,6 @@ public class Camera extends AppCompatActivity {
             int width = 0;
             int height = 0;
 
-            manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
-
             if (characteristics != null) {
                 imgSize = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
             }
@@ -218,13 +222,17 @@ public class Camera extends AppCompatActivity {
             outputSurfaces.add(reader.getSurface());
             outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
 
-            final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureBuilder.addTarget(reader.getSurface());
-            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            captureRequestBuilder.addTarget(reader.getSurface());
+            captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+
+            if (isTorchOn) {
+                captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_SINGLE);
+            }
 
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+            captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             ImageReader.OnImageAvailableListener readerListener = readerFunction -> {
                 capturedImgFilename = "bitmap.png";
 
@@ -250,13 +258,15 @@ public class Camera extends AppCompatActivity {
                     Intent intent = new Intent(Camera.this, Result.class);
                     intent.putExtra("imgFilename", capturedImgFilename);
                     startActivity(intent);
+                    isTorchOn = false;
+
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession session) {
                     try {
-                        session.capture(captureBuilder.build(), captureListener, backgroundHandler);
+                        session.capture(captureRequestBuilder.build(), captureListener, backgroundHandler);
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
@@ -282,29 +292,21 @@ public class Camera extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void toggleTorch() {
+    public void toggleTorch() {
         isTorchOn = !isTorchOn;
 
         try {
-            manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-            cameraID = manager.getCameraIdList()[0];
+            // Comments causes the picture to darken at low light
+            if (isTorchOn) {
+                captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
+            } else {
+                captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
+            }
 
-            manager.setTorchMode(cameraID, isTorchOn);
+            cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, null);
         } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void finish() {
-        super.finish();
-        try {
-            manager.setTorchMode(cameraID, false);
-        } catch (CameraAccessException e) {
-            // prints stack trace on standard error
-            // output error stream
             e.printStackTrace();
         }
     }
@@ -353,13 +355,11 @@ public class Camera extends AppCompatActivity {
     }
 
     // Navigation Functions
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBackPressed() {
         goBack();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void goBack() {
         startActivity(new Intent(Camera.this, Dashboard.class));
         finish();
