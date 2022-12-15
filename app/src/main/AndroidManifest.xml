@@ -9,7 +9,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/imglogo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -24,7 +24,7 @@
         <activity
             android:name=".Result"
             android:exported="false"
-            android:parentActivityName=".Camera"/>
+            android:parentActivityName=".Camera" />
         <activity
             android:name=".Camera"
             android:exported="false" />
@@ -40,7 +40,7 @@
         <activity
             android:name=".RegistrationP2"
             android:exported="false"
-            android:parentActivityName=".RegistrationP1"/>
+            android:parentActivityName=".RegistrationP1" />
         <activity
             android:name=".RegistrationP1"
             android:exported="false" />
@@ -49,6 +49,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

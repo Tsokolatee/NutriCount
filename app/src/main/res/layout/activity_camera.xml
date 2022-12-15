@@ -4,31 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0DFFFFFF"
     tools:context=".Camera">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/materialToolbar6"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:background="#B5BF3C"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnMenuBurger"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#00FFFFFF"
-        android:drawableTop="@drawable/ic_burgermenu"
-        app:layout_constraintStart_toStartOf="@+id/materialToolbar6"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar6"
-        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextureView
         android:id="@+id/txvwCameraVision"
@@ -37,28 +14,41 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar6" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar16"
+        android:layout_width="410dp"
+        android:layout_height="160dp"
+        android:background="#CC000000"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="@+id/txvwCameraVision"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txvwCameraVision" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar17"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:background="#CC000000"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="@+id/txvwCameraVision"
+        app:layout_constraintEnd_toEndOf="@+id/txvwCameraVision"
+        app:layout_constraintStart_toStartOf="@+id/txvwCameraVision" />
 
     <ImageView
         android:id="@+id/imageView9"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/imgdlogo"
-        app:layout_constraintEnd_toEndOf="@+id/materialToolbar6"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar6"
+        app:layout_constraintEnd_toEndOf="@+id/materialToolbar16"
+        app:layout_constraintTop_toTopOf="@+id/txvwCameraVision"
         app:srcCompat="@drawable/imglogo" />
-
-    <ImageView
-        android:id="@+id/btnClose"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar6"
-        app:srcCompat="@drawable/ic_close" />
 
     <ImageView
         android:id="@+id/btnFlash"
@@ -67,27 +57,28 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@+id/btnClose"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar6"
+        app:layout_constraintTop_toTopOf="@+id/txvwCameraVision"
         app:srcCompat="@drawable/ic_flash" />
 
     <ImageView
-        android:id="@+id/btnKebab"
+        android:id="@+id/btnClose"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar6"
-        app:srcCompat="@drawable/ic_kebab" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txvwCameraVision"
+        app:srcCompat="@drawable/ic_close" />
 
     <ImageView
         android:id="@+id/btnShutter"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbar17"
         app:srcCompat="@drawable/ic_capture" />
 
 

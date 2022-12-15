@@ -45,7 +45,7 @@
     <ImageView
         android:id="@+id/imgvwCaptured"
         android:layout_width="250dp"
-        android:layout_height="160dp"
+        android:layout_height="250dp"
         android:layout_marginTop="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,11 +53,11 @@
         app:srcCompat="@drawable/img_meat" />
 
     <TextView
-        android:id="@+id/textView28"
+        android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Grow Food"
+        android:text="[Name]"
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -73,17 +73,17 @@
         android:background="@drawable/custom_container"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="@+id/textView28"
-        app:layout_constraintStart_toStartOf="@+id/textView28"
-        app:layout_constraintTop_toBottomOf="@+id/textView28" />
+        app:layout_constraintEnd_toEndOf="@+id/result"
+        app:layout_constraintStart_toStartOf="@+id/result"
+        app:layout_constraintTop_toBottomOf="@+id/result" />
 
     <TextView
-        android:id="@+id/textView29"
+        android:id="@+id/resultPreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="Meat"
+        android:text="[Confidence]"
         android:textColor="#FFFFFF"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -91,17 +91,17 @@
         app:layout_constraintTop_toTopOf="@+id/materialToolbar12" />
 
     <TextView
-        android:id="@+id/textView30"
+        android:id="@+id/txtvwConfidences"
         android:layout_width="330dp"
         android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:text="100 Grams of Meat is equivalent to 143 Calories. 1 Kg of Meat is equivalent to 1,430 Calories."
+        android:text="[List]"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView29"
-        app:layout_constraintTop_toBottomOf="@+id/textView29" />
+        app:layout_constraintStart_toStartOf="@+id/resultPreview"
+        app:layout_constraintTop_toBottomOf="@+id/resultPreview" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

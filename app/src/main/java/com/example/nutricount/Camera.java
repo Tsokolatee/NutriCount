@@ -18,6 +18,7 @@ import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -29,10 +30,19 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.*;
 
+import com.example.nutricount.ml.NewModel;
+
+import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 // https://www.youtube.com/watch?v=MhsG3jYEsek
@@ -41,6 +51,7 @@ public class Camera extends AppCompatActivity {
     private ImageView btnShutter;
     private ImageView btnClose;
     private TextureView textureView;
+    private TextView resultPreview;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -74,6 +85,8 @@ public class Camera extends AppCompatActivity {
                 goBack();
             }
         });
+
+        resultPreview = (TextView) findViewById(R.id.resultPreview);
 
         // Camera View init
         textureView = findViewById(R.id.txvwCameraVision);
@@ -131,24 +144,6 @@ public class Camera extends AppCompatActivity {
         }
     };
 
-    protected void startBackgroundThread() {
-        backgroundThread = new HandlerThread("Camera Background");
-        backgroundThread.start();
-        backgroundHandler = new Handler(backgroundThread.getLooper());
-    }
-
-    protected void stopBackgroundThread() {
-        backgroundThread.quitSafely();
-
-        try {
-            backgroundThread.join();
-            backgroundThread = null;
-            backgroundHandler = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     protected void takePicture() {
         if (cameraDevice == null) {
             Log.e(TAG, "cameraDevice is null");
@@ -193,11 +188,11 @@ public class Camera extends AppCompatActivity {
                         ByteBuffer buffer = img.getPlanes()[0].getBuffer();
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
+
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
                         FileOutputStream stream = openFileOutput(capturedImgFilename, Context.MODE_PRIVATE);
                         bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
                         stream.close();
-                        bmp.recycle();
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
@@ -295,8 +290,6 @@ public class Camera extends AppCompatActivity {
             Log.e(TAG, "updatePreview error, return");
         }
 
-        captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-
         try {
             cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, backgroundHandler);
         } catch (CameraAccessException e) {
@@ -304,7 +297,25 @@ public class Camera extends AppCompatActivity {
         }
     }
 
-    // OVERRIDE ONREQUESTPERMISSIONRESULT (FOR CAMERA)
+    // TODO OVERRIDE ONREQUESTPERMISSIONRESULT (FOR CAMERA)
+
+    protected void startBackgroundThread() {
+        backgroundThread = new HandlerThread("Camera Background");
+        backgroundThread.start();
+        backgroundHandler = new Handler(backgroundThread.getLooper());
+    }
+
+    protected void stopBackgroundThread() {
+        backgroundThread.quitSafely();
+
+        try {
+            backgroundThread.join();
+            backgroundThread = null;
+            backgroundHandler = null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onResume() {
