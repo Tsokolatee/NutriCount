@@ -2,7 +2,7 @@ package com.example.nutricount;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -23,25 +23,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class Result extends AppCompatActivity {
-    private ImageView imgvwCaptured;
-    private Bitmap bmp;
-    private TextView result, confidence, txtvwConfidences;
-    private TextView btnBackResult;
+    // Component Variables
+    private TextView result, confidence, textviewConfidences;
 
-    private int imageSize = 224;
+    // Image Variables
+    private Bitmap bmp;
+    private final int imageSize = 224;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        btnBackResult = (TextView) findViewById(R.id.btnBackResult);
-        btnBackResult.setOnClickListener(view -> {
-            Intent intent = new Intent(Result.this, Camera.class);
-            startActivity(intent);
-            finish();
-        });
-
+        // Get Image Name From Previous Activity
         Bundle extras = getIntent().getExtras();
         String capturedImgFilename = extras.getString("imgFilename");
 
@@ -53,12 +47,14 @@ public class Result extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        imgvwCaptured = (ImageView) findViewById(R.id.imgvwCaptured);
+        // Component bind
+        ImageView imageviewCaptured = (ImageView) findViewById(R.id.imgvwCaptured);
         result = (TextView) findViewById(R.id.result);
         confidence = (TextView) findViewById(R.id.resultPreview);
-        txtvwConfidences = (TextView) findViewById(R.id.txtvwConfidences);
+        textviewConfidences = (TextView) findViewById(R.id.txtvwConfidences);
 
-        imgvwCaptured.setImageBitmap(preProcessImg());
+        // Process Image
+        imageviewCaptured.setImageBitmap(preProcessImg());
         imgScan();
     }
 
@@ -73,11 +69,12 @@ public class Result extends AppCompatActivity {
         return bmp;
     }
 
+    @SuppressLint("DefaultLocale")
     private void imgScan(){
         try {
             Model mdl = Model.newInstance(getApplicationContext());
 
-            // Creates inputs for reference.
+            // Get input's RGB values for classification requirements
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[] {1, 224, 224, 3}, DataType.FLOAT32);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
             byteBuffer.order(ByteOrder.nativeOrder());
@@ -91,34 +88,39 @@ public class Result extends AppCompatActivity {
                     int val = intValues[pixel++];
                     byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f / 255.f));
                     byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f / 255.f));
-                    byteBuffer.putFloat((val >> 0xFF) * (1.f / 255.f));
+                    byteBuffer.putFloat((val >> 31) * (1.f / 255.f));
                 }
             }
 
             inputFeature0.loadBuffer(byteBuffer);
 
-            // Runs model inference and gets result.
+            // Runs model inference and get result
             Model.Outputs outputs = mdl.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-
             float[] confidences = outputFeature0.getFloatArray();
-            String s = "";
-            String[] classes = {"Pasta", "Cereal", "Bread", "Milk", "Chicken", "Pork", "Cheese", "Sausage", "Egg", "Carrot", "Kiwi", "Papaya", "Lemon", "Cabbage", "Banana", "Orange", "Pear", "Apple", "Ampalaya", "Kalabasa", "Cucumber", "Corn", "Eggplant",};
 
-            List<Confidence> list = new ArrayList<Confidence>(confidences.length);
+            String[] classes = {"Pasta", "Cereal", "Bread", "Milk", "Chicken", "Pork", "Cheese", "Sausage", "Egg", "Carrot", "Kiwi", "Papaya", "Lemon", "Cabbage", "Banana", "Orange", "Pear", "Apple", "Ampalaya", "Kalabasa", "Cucumber", "Corn", "Eggplant",};
+            StringBuilder s = new StringBuilder();
+
+            List<Confidence> list = new ArrayList<>(confidences.length);
+
             for(int i = 0; i < confidences.length; i++){
                 list.add(new Confidence(i, confidences[i]));
             }
+
             Collections.sort(list, Collections.reverseOrder());
 
+            // Show Result
             result.setText(classes[list.get(0).index]);
             confidence.setText(String.format("Confidence LVL: %s", list.get(0).toString()));
-            int index = 0;
+
+            int index;
             for(int i = 1; i <= 4; i++) {
                 index = list.get(i).index;
-                s += String.format("%d: %s (%s)\n", i + 1, classes[index], list.get(i).toString());
+                s.append(String.format("%d: %s (%s)\n", i + 1, classes[index], list.get(i).toString()));
             }
-            txtvwConfidences.setText(s);
+
+            textviewConfidences.setText(s.toString());
 
             // Releases model resources if no longer used.
             mdl.close();
