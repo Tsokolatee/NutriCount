@@ -2,6 +2,7 @@ package com.example.nutricount;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -25,6 +26,7 @@ public class Result extends AppCompatActivity {
     private ImageView imgvwCaptured;
     private Bitmap bmp;
     private TextView result, confidence, txtvwConfidences;
+    private TextView btnBackResult;
 
     private int imageSize = 224;
 
@@ -32,6 +34,13 @@ public class Result extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        btnBackResult = (TextView) findViewById(R.id.btnBackResult);
+        btnBackResult.setOnClickListener(view -> {
+            Intent intent = new Intent(Result.this, Camera.class);
+            startActivity(intent);
+            finish();
+        });
 
         Bundle extras = getIntent().getExtras();
         String capturedImgFilename = extras.getString("imgFilename");

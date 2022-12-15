@@ -247,6 +247,7 @@ public class Camera extends AppCompatActivity {
                     Intent intent = new Intent(Camera.this, Result.class);
                     intent.putExtra("imgFilename", capturedImgFilename);
                     startActivity(intent);
+                    finish();
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
