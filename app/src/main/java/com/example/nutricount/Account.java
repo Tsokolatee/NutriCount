@@ -1,22 +1,22 @@
 package com.example.nutricount;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Account {
+public class Account implements Serializable {
     private int ID;
-    private String username, email, password;
+    private String email, password;
     private String firstName, lastName, gender;
     private double height, weight, goal;
     private List<String> allergy;
 
     Account(
-            int ID, String username, String email, String password,
+            int ID, String email, String password,
             String firstName, String lastName, String gender,
             double height, double weight, double goal,
             List<String> allergy
     ) {
         this.ID = ID;
-        this.username = username;
         this.email = email;
         this.password = password;
 
@@ -30,12 +30,48 @@ public class Account {
         this.allergy = allergy;
     }
 
-    public int getID() {
-        return ID;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
-    public String getUsername() {
-        return username;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setGoal(double goal) {
+        this.goal = goal;
+    }
+
+    public void setAllergy(List<String> allergy) {
+        this.allergy = allergy;
+    }
+
+    public int getID() {
+        return ID;
     }
 
     public String getEmail() {

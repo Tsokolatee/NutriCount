@@ -10,11 +10,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
+    // Database Variables
     public static final String DB_NAME = "nutricount.db";
     private static final int DB_VERSION = 1;
+
+    // Table Variables
     private static final String TABLE_ACCOUNTS = "accounts";
 
-    private static final String CREATE_TABLE_ACCOUNTS = "CREATE TABLE " + TABLE_ACCOUNTS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)";
+    // Column Variables
+    private static final String ID = "ID";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String FIRST_NAME = "firstName";
+    private static final String LAST_NAME = "lastName";
+    private static final String GENDER = "gender";
+    private static final String HEIGHT = "height";
+    private static final String WEIGHT = "weight";
+    private static final String GOAL = "goal";
+    private static final String ALLERGY = "allergy";
+
+    // TABLE COMMANDS
+    private static final String CREATE_TABLE_ACCOUNTS = "CREATE TABLE " + TABLE_ACCOUNTS + " (" +
+            ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            EMAIL + " TEXT," +
+            PASSWORD + " TEXT," +
+            FIRST_NAME + " TEXT," +
+            LAST_NAME + " TEXT," +
+            GENDER + " TEXT," +
+            HEIGHT + " REAL," +
+            WEIGHT + " REAL," +
+            GOAL + " REAL," +
+            ALLERGY + " TEXT)";
 
     public SQLiteHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -31,45 +57,46 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public Boolean checkUsername(String username) {
+    public Boolean checkEmail(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE username=? OR email=?",
-                new String[] { username, username }
+                "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " + EMAIL + "=?",
+                new String[] { email }
         );
 
-        return cursor.getCount() > 0;
+        boolean result = cursor.getCount() > 0;
+        cursor.close();
+        return result;
     }
 
-    public Boolean checkUsernamePassword(String username, String password) {
+    public Boolean checkCredentials(String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE username=? OR email=? AND password=?",
-                new String[] { username, username, password }
+                "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=?",
+                new String[] { email, password }
         );
 
-        return cursor.getCount() > 0;
+        boolean result = cursor.getCount() > 0;
+        cursor.close();
+        return result;
     }
 
     public void createAccount(
-            SQLiteDatabase db, String username, String email, String password,
+            SQLiteDatabase db, String email, String password,
             String firstName, String lastName, String gender,
             double height, double weight, double goal, List<String> allergy
     ) {
         ContentValues values = new ContentValues();
 
-        values.put("username", username);
-        values.put("email", email);
-        values.put("password", password);
-
-        values.put("firstName", firstName);
-        values.put("lastName", lastName);
-        values.put("gender", gender);
-
-        values.put("height", height);
-        values.put("weight", weight);
-        values.put("goal", goal);
-        values.put("allergy", String.join(",", allergy));
+        values.put(EMAIL, email);
+        values.put(PASSWORD, password);
+        values.put(FIRST_NAME, firstName);
+        values.put(LAST_NAME, lastName);
+        values.put(GENDER, gender);
+        values.put(HEIGHT, height);
+        values.put(WEIGHT, weight);
+        values.put(GOAL, goal);
+        values.put(ALLERGY, String.join(",", allergy));
 
         db.insert(TABLE_ACCOUNTS, null, values);
     }
@@ -79,19 +106,33 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         ArrayList<Account> accounts = new ArrayList<>();
 
         accounts.add(new Account(
-                0, "eru.2001", "ocampo.jerud.2001@gmail.com", "eru.2001",
-                "Jerud", "Ocampo", "Male",
-                169, 60.3, 69, new ArrayList<>()
+                0,
+                "ocampo.jerud.2001@gmail.com",
+                "eru.2001",
+                "Jerud",
+                "Ocampo",
+                "Male",
+                169,
+                60.3,
+                69,
+                new ArrayList<>()
         ));
         accounts.add(new Account(
-                1, "michei025", "floresjake021600@gmail.com", "michei025",
-                "Jake", "Flores", "Male",
-                176, 102, 80, new ArrayList<>()
+                1,
+                "floresjake021600@gmail.com",
+                "michei025",
+                "Jake",
+                "Flores",
+                "Male",
+                176,
+                102,
+                80,
+                new ArrayList<>()
         ));
 
         for (Account a: accounts) {
             createAccount(
-                    db, a.getUsername(), a.getEmail(), a.getPassword(),
+                    db, a.getEmail(), a.getPassword(),
                     a.getFirstName(), a.getLastName(), a.getGender(),
                     a.getHeight(), a.getWeight(), a.getGoal(), a.getAllergy()
             );
