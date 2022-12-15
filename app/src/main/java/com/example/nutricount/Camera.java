@@ -3,6 +3,7 @@ package com.example.nutricount;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -18,6 +19,7 @@ import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -31,15 +33,13 @@ import android.widget.*;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 // https://www.youtube.com/watch?v=MhsG3jYEsek
 // https://www.freecodecamp.org/news/android-camera2-api-take-photos-and-videos/
 public class Camera extends AppCompatActivity {
-    // Component Variable
-    private ImageView btnShutter;
-    private ImageView btnClose;
+    // Global Component Variables
     private TextureView textureView;
 
     // Orientations
@@ -52,11 +52,13 @@ public class Camera extends AppCompatActivity {
     }
 
     // Camera Variables
-    private String cameraID;
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
+    private CameraManager manager;
+    private String cameraID;
+    private boolean isTorchOn;
 
     // Handler Variables
     private Handler backgroundHandler;
@@ -66,13 +68,14 @@ public class Camera extends AppCompatActivity {
     private Size imageDimension;
     private String capturedImgFilename;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
         // Close Button bind
-        btnClose = findViewById(R.id.btnClose);
+        ImageView btnClose = findViewById(R.id.btnClose);
         btnClose.setOnClickListener(view -> goBack());
 
         // Camera View bind
@@ -80,10 +83,13 @@ public class Camera extends AppCompatActivity {
         if (textureView != null)
             textureView.setSurfaceTextureListener(textureListener);
 
-        // Take a picture bind
-        btnShutter = findViewById(R.id.btnShutter);
+        // Camera Shutter bind
+        ImageView btnShutter = findViewById(R.id.btnShutter);
         if (btnShutter != null)
             btnShutter.setOnClickListener(view -> takePicture());
+
+        ImageView btnFlash = findViewById(R.id.btnFlash);
+        btnFlash.setOnClickListener(view -> toggleTorch());
     }
 
     // Class Attributes
@@ -128,16 +134,17 @@ public class Camera extends AppCompatActivity {
 
     // Class Functions
     private void openCamera() {
-        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-
         try {
+            // Choose which camera, then get its dimension
+            manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
             cameraID = manager.getCameraIdList()[0];
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraID);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
+
             imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
 
-            // Add permission for camera and let user grant the permission
+            // Add permission for camera and let user grant the permission if not yet granted
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(Camera.this, new String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                 return;
@@ -151,20 +158,22 @@ public class Camera extends AppCompatActivity {
 
     protected void createCameraPreview() {
         try {
+            // Create surface, then add update handler
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
             texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
-
             Surface surface = new Surface(texture);
+
             captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             captureRequestBuilder.addTarget(surface);
-            cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+            cameraDevice.createCaptureSession(Collections.singletonList(surface), new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     // The camera is already closed
                     if (null == cameraDevice) {
                         return;
                     }
+
                     // When session is ready, we start displaying the preview
                     cameraCaptureSessions = cameraCaptureSession;
                     updatePreview();
@@ -186,12 +195,12 @@ public class Camera extends AppCompatActivity {
             return;
         }
 
-        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-
         try {
             Size[] imgSize = null;
             int width = 0;
             int height = 0;
+
+            manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
 
             if (characteristics != null) {
@@ -204,9 +213,11 @@ public class Camera extends AppCompatActivity {
             }
 
             ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
-            List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+
+            List<Surface> outputSurfaces = new ArrayList<>(2);
             outputSurfaces.add(reader.getSurface());
             outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
+
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
@@ -214,28 +225,20 @@ public class Camera extends AppCompatActivity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
-                @Override
-                public void onImageAvailable(ImageReader reader) {
-                    Image img = null;
-                    capturedImgFilename = "bitmap.png";
-                    try {
-                        img = reader.acquireLatestImage();
-                        ByteBuffer buffer = img.getPlanes()[0].getBuffer();
-                        byte[] bytes = new byte[buffer.capacity()];
-                        buffer.get(bytes);
+            ImageReader.OnImageAvailableListener readerListener = readerFunction -> {
+                capturedImgFilename = "bitmap.png";
 
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
-                        FileOutputStream stream = openFileOutput(capturedImgFilename, Context.MODE_PRIVATE);
-                        bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-                        stream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (img != null) {
-                            img.close();
-                        }
-                    }
+                try (Image img = readerFunction.acquireLatestImage()) {
+                    ByteBuffer buffer = img.getPlanes()[0].getBuffer();
+                    byte[] bytes = new byte[buffer.capacity()];
+                    buffer.get(bytes);
+
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
+                    FileOutputStream stream = openFileOutput(capturedImgFilename, Context.MODE_PRIVATE);
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+                    stream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             };
             reader.setOnImageAvailableListener(readerListener, backgroundHandler);
@@ -260,8 +263,7 @@ public class Camera extends AppCompatActivity {
                 }
 
                 @Override
-                public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-                }
+                public void onConfigureFailed(@NonNull CameraCaptureSession session) { }
             }, backgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -280,8 +282,36 @@ public class Camera extends AppCompatActivity {
         }
     }
 
-    // TODO OVERRIDE ONREQUESTPERMISSIONRESULT (FOR CAMERA)
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void toggleTorch() {
+        isTorchOn = !isTorchOn;
 
+        try {
+            manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+            cameraID = manager.getCameraIdList()[0];
+
+            manager.setTorchMode(cameraID, isTorchOn);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void finish() {
+        super.finish();
+        try {
+            manager.setTorchMode(cameraID, false);
+        } catch (CameraAccessException e) {
+            // prints stack trace on standard error
+            // output error stream
+            e.printStackTrace();
+        }
+    }
+
+    // TODO OVERRIDE ON REQUEST PERMISSION RESULT (FOR CAMERA)
+
+    // Handler and Threads Functions
     protected void startBackgroundThread() {
         backgroundThread = new HandlerThread("Camera Background");
         backgroundThread.start();
@@ -322,11 +352,14 @@ public class Camera extends AppCompatActivity {
         super.onPause();
     }
 
+    // Navigation Functions
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBackPressed() {
         goBack();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void goBack() {
         startActivity(new Intent(Camera.this, Dashboard.class));
         finish();

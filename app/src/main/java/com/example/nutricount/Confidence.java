@@ -1,5 +1,7 @@
 package com.example.nutricount;
 
+import androidx.annotation.NonNull;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -18,6 +20,7 @@ public class Confidence implements Comparable<Confidence> {
         return Float.compare(this.value, c.value);
     }
 
+    @NonNull
     @Override
     public String toString() {
         DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
