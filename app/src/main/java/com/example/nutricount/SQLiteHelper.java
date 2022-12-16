@@ -48,7 +48,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             GOAL + " REAL," +
             ALLERGY + " TEXT)";
 
-    private static final String CREATE_TABLE_CALORIES = "CREATE TABLE" + " (" +
+    private static final String CREATE_TABLE_CALORIES = "CREATE TABLE " + TABLE_CALORIES + " (" +
             FOOD_NAME + " STRING PRIMARY KEY," +
             CATEGORY + " TEXT," +
             DESCRIPTION +" TEXT)";
