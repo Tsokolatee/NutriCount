@@ -17,6 +17,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     // Table Variables
     private static final String TABLE_ACCOUNTS = "accounts";
 
+    private static final String TABLE_CALORIES = "calories";
+
     // Column Variables
     private static final String ID = "ID";
     private static final String EMAIL = "email";
@@ -28,6 +30,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String WEIGHT = "weight";
     private static final String GOAL = "goal";
     private static final String ALLERGY = "allergy";
+
+    private static final String FOOD_NAME = "food_name";
+    private static final String CATEGORY = "category";
+    private static final String DESCRIPTION = "description";
 
     // TABLE COMMANDS
     private static final String CREATE_TABLE_ACCOUNTS = "CREATE TABLE " + TABLE_ACCOUNTS + " (" +
@@ -42,6 +48,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             GOAL + " REAL," +
             ALLERGY + " TEXT)";
 
+    private static final String CREATE_TABLE_CALORIES = "CREATE TABLE" + " (" +
+            FOOD_NAME + " STRING PRIMARY KEY," +
+            CATEGORY + " TEXT," +
+            DESCRIPTION +" TEXT)";
+
     public SQLiteHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -49,6 +60,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE_ACCOUNTS);
+        sqLiteDatabase.execSQL(CREATE_TABLE_CALORIES);
     }
 
     @Override
