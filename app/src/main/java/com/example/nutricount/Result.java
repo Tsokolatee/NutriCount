@@ -30,10 +30,16 @@ public class Result extends AppCompatActivity {
     private Bitmap bmp;
     private final int imageSize = 224;
 
+    // Database Variables
+    private SQLiteHelper db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        db = new SQLiteHelper(this);
+        db.populateCalories();
 
         // Get Image Name From Previous Activity
         Bundle extras = getIntent().getExtras();
@@ -99,8 +105,7 @@ public class Result extends AppCompatActivity {
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
             float[] confidences = outputFeature0.getFloatArray();
 
-            String[] classes = {"Pasta", "Cereal", "Bread", "Milk", "Chicken", "Pork", "Cheese", "Sausage", "Egg", "Carrot", "Kiwi", "Papaya", "Lemon", "Cabbage", "Banana", "Orange", "Pear", "Apple", "Ampalaya", "Kalabasa", "Cucumber", "Corn", "Eggplant",};
-            StringBuilder s = new StringBuilder();
+            String[] classes = {"Pasta", "Cereal", "Bread", "Milk", "Chicken", "Pork", "Cheese", "Sausage", "Egg", "Carrot", "Kiwi", "Papaya", "Lemon", "Cabbage", "Banana", "Orange", "Pear", "Apple", "Ampalaya", "Kalabasa", "Cucumber", "Corn", "Eggplant"};
 
             List<Confidence> list = new ArrayList<>(confidences.length);
 
@@ -109,18 +114,12 @@ public class Result extends AppCompatActivity {
             }
 
             Collections.sort(list, Collections.reverseOrder());
+            Calories item = db.getCalorieItem(classes[list.get(0).index]);
 
             // Show Result
-            result.setText(classes[list.get(0).index]);
-            confidence.setText(String.format("Confidence LVL: %s", list.get(0).toString()));
-
-            int index;
-            for(int i = 1; i <= 4; i++) {
-                index = list.get(i).index;
-                s.append(String.format("%d: %s (%s)\n", i + 1, classes[index], list.get(i).toString()));
-            }
-
-            textviewConfidences.setText(s.toString());
+            result.setText(String.format("%s (%s)", item.getFoodName(), list.get(0).toString()));
+            confidence.setText(item.getCategory());
+            textviewConfidences.setText(item.getDescription());
 
             // Releases model resources if no longer used.
             mdl.close();

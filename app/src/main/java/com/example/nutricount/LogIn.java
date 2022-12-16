@@ -43,6 +43,7 @@ public class LogIn extends AppCompatActivity {
 
                     if (validCredentials) {
                         Intent intent = new Intent(LogIn.this, Dashboard.class);
+                        db.LoggedInEmail = email;
                         startActivity(intent);
                         finish();
                     } else {

@@ -128,6 +128,7 @@ public class RegistrationP2 extends AppCompatActivity implements Serializable {
                 );
 
                 Intent intent = new Intent(RegistrationP2.this, Profile.class);
+                db.LoggedInEmail = registerData.getEmail();
                 startActivity(intent);
                 finish();
             } else {
