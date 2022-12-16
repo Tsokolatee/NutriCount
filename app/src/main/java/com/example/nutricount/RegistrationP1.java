@@ -7,13 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.*;
 import android.content.Intent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class RegistrationP1 extends AppCompatActivity implements Serializable {
     private Account registerData;
@@ -43,22 +41,15 @@ public class RegistrationP1 extends AppCompatActivity implements Serializable {
         });
         // Password bind
         inputRegPassword = findViewById(R.id.inputRegPassword);
-        inputRegPassword.setOnFocusChangeListener((view, b) -> {
-            if (!b) {
-                String val = formatStringData(inputFName.getText().toString(), null);
-
-                if (val != null) {
-                    registerData.setFirstName(val);
-                }
-            }
-        });
+        inputRegPassword.setOnFocusChangeListener((view, b) -> { evaluatePassword(b); });
         // Confirm Password bind
         inputCPassword = findViewById(R.id.inputCPassword);
+        inputCPassword.setOnFocusChangeListener((view, b) -> { evaluatePassword(b); });
         // First Name bind
         inputFName = findViewById(R.id.inputFName);
         inputFName.setOnFocusChangeListener((view, b) -> {
             if (!b) {
-                String val = formatStringData(inputFName.getText().toString(), null);
+                String val = formatStringData(inputFName.getText().toString(), "name");
 
                 if (val != null) {
                     registerData.setFirstName(val);
@@ -69,7 +60,7 @@ public class RegistrationP1 extends AppCompatActivity implements Serializable {
         inputLName = findViewById(R.id.inputLName);
         inputLName.setOnFocusChangeListener((view, b) -> {
             if (!b) {
-                String val = formatStringData(inputLName.getText().toString(), null);
+                String val = formatStringData(inputLName.getText().toString(), "name");
 
                 if (val != null) {
                     registerData.setLastName(val);
@@ -78,15 +69,26 @@ public class RegistrationP1 extends AppCompatActivity implements Serializable {
         });
         // Birthday bind
         inputBDay = findViewById(R.id.inputBDay);
+        inputBDay.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                String val = formatStringData(inputBDay.getText().toString(), "");
+
+                if (val != null) {
+                    registerData.setBirthday(val);
+                }
+            }
+        });
         // Gender bind
         radioGroup = findViewById(R.id.radioGroup);
-
-//        RadioButton genderSelected = findViewById(genderSelection.getCheckedRadioButtonId());
-//        String gender = genderSelected.getText().toString();
-//        gender = gender.substring(gender.lastIndexOf("rbtn") + 1);
+        radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            RadioButton radioButton = findViewById(i);
+            String gender = radioButton.getText().toString();
+            registerData.setGender(gender.substring(gender.lastIndexOf("rbtn") + 1));
+        });
 
         registerData = new Account(
                 -1,
+                null,
                 null,
                 null,
                 null,
@@ -111,10 +113,16 @@ public class RegistrationP1 extends AppCompatActivity implements Serializable {
 
         Button btnNext = (Button) findViewById(R.id.btnNext);
         btnNext.setOnClickListener(view -> {
-            // Retain data when switching to part two of registration
-            Intent intent = new Intent(getApplicationContext(), RegistrationP2.class);
-            intent.putExtra("account", registerData);
-            activityResultLauncher.launch(intent);
+            fillData();
+
+            if (isPartOneFilled()) {
+                // Retain data when switching to part two of registration
+                Intent intent = new Intent(getApplicationContext(), RegistrationP2.class);
+                intent.putExtra("account", registerData);
+                activityResultLauncher.launch(intent);
+            } else {
+                Toast.makeText(RegistrationP1.this, "Please fill out all fields in this part before proceeding.", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -136,18 +144,57 @@ public class RegistrationP1 extends AppCompatActivity implements Serializable {
                 case "email":
                     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
                     value = value.trim();
-                    return (value.matches(emailPattern) && value.length() > 0) ? value : null;
-                default:
+                    if (value.matches(emailPattern) && value.length() > 0) {
+                        return value;
+                    } else {
+                        Toast.makeText(RegistrationP1.this, "Incorrect e-mail format.", Toast.LENGTH_SHORT).show();
+                        return "";
+                    }
+                case "name":
                     value = value.trim();
                     value = value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase();
                     return value;
+                default:
+                    value = value.trim();
+                    return value;
             }
         } else {
-            return null;
+            return "";
         }
     }
 
-    private void getData() {
+    private void evaluatePassword(boolean b) {
+        if (!b) {
+            if (!TextUtils.isEmpty(inputRegPassword.getText().toString()) && !TextUtils.isEmpty(inputCPassword.getText().toString())) {
+                String val = formatStringData(inputRegPassword.getText().toString(), "");
+                String val2 = formatStringData(inputCPassword.getText().toString(), "");
 
+                if (!TextUtils.isEmpty(val) && !TextUtils.isEmpty(val2) && val.equals(val2)) {
+                    registerData.setPassword(val);
+                } else {
+                    Toast.makeText(RegistrationP1.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void fillData() {
+        registerData.setEmail(formatStringData(inputRegEmail.getText().toString(), "email"));
+        evaluatePassword(false);
+        registerData.setFirstName(formatStringData(inputFName.getText().toString(), "name"));
+        registerData.setLastName(formatStringData(inputLName.getText().toString(), "name"));
+        registerData.setBirthday(formatStringData(inputBDay.getText().toString(), ""));
+        RadioButton radioButton = findViewById(radioGroup.getCheckedRadioButtonId());
+        String gender = radioButton.getText().toString();
+        registerData.setGender(gender.substring(gender.lastIndexOf("rbtn") + 1));
+    }
+
+    private boolean isPartOneFilled() {
+        return !TextUtils.isEmpty(registerData.getEmail())
+                && !TextUtils.isEmpty(registerData.getPassword())
+                && !TextUtils.isEmpty(registerData.getFirstName())
+                && !TextUtils.isEmpty(registerData.getLastName())
+                && !TextUtils.isEmpty(registerData.getGender())
+                && !TextUtils.isEmpty(registerData.getBirthday());
     }
 }

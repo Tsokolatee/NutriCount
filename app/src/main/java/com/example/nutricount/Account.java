@@ -6,13 +6,13 @@ import java.util.List;
 public class Account implements Serializable {
     private int ID;
     private String email, password;
-    private String firstName, lastName, gender;
+    private String firstName, lastName, gender, birthday;
     private double height, weight, goal;
     private List<String> allergy;
 
     Account(
             int ID, String email, String password,
-            String firstName, String lastName, String gender,
+            String firstName, String lastName, String gender, String birthday,
             double height, double weight, double goal,
             List<String> allergy
     ) {
@@ -23,6 +23,7 @@ public class Account implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
+        this.birthday = birthday;
 
         this.height = height;
         this.weight = weight;
@@ -52,6 +53,10 @@ public class Account implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public void setHeight(double height) {
@@ -93,6 +98,8 @@ public class Account implements Serializable {
     public String getGender() {
         return gender;
     }
+
+    public String getBirthday() { return birthday; }
 
     public double getHeight() {
         return height;

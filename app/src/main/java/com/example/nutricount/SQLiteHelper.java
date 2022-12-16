@@ -24,6 +24,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
     private static final String GENDER = "gender";
+    private static final String BIRTHDAY = "birthday";
     private static final String HEIGHT = "height";
     private static final String WEIGHT = "weight";
     private static final String GOAL = "goal";
@@ -37,6 +38,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             FIRST_NAME + " TEXT," +
             LAST_NAME + " TEXT," +
             GENDER + " TEXT," +
+            BIRTHDAY + " TEXT," +
             HEIGHT + " REAL," +
             WEIGHT + " REAL," +
             GOAL + " REAL," +
@@ -83,7 +85,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public void createAccount(
             SQLiteDatabase db, String email, String password,
-            String firstName, String lastName, String gender,
+            String firstName, String lastName, String gender, String birthday,
             double height, double weight, double goal, List<String> allergy
     ) {
         ContentValues values = new ContentValues();
@@ -93,6 +95,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         values.put(FIRST_NAME, firstName);
         values.put(LAST_NAME, lastName);
         values.put(GENDER, gender);
+        values.put(BIRTHDAY, birthday);
         values.put(HEIGHT, height);
         values.put(WEIGHT, weight);
         values.put(GOAL, goal);
@@ -112,6 +115,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "Jerud",
                 "Ocampo",
                 "Male",
+                "07/29/2001",
                 169,
                 60.3,
                 69,
@@ -124,6 +128,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "Jake",
                 "Flores",
                 "Male",
+                "02/16/2000",
                 176,
                 102,
                 80,
@@ -133,7 +138,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         for (Account a: accounts) {
             createAccount(
                     db, a.getEmail(), a.getPassword(),
-                    a.getFirstName(), a.getLastName(), a.getGender(),
+                    a.getFirstName(), a.getLastName(), a.getGender(), a.getBirthday(),
                     a.getHeight(), a.getWeight(), a.getGoal(), a.getAllergy()
             );
         }
