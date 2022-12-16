@@ -19,18 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnMenuBurger"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#00FFFFFF"
-        android:drawableTop="@drawable/ic_burgermenu"
-        app:layout_constraintStart_toStartOf="@+id/materialToolbar6"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar6"
-        tools:ignore="SpeakableTextPresentCheck" />
-
     <ImageView
         android:id="@+id/imageView9"
         android:layout_width="48dp"
@@ -102,6 +90,19 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/resultPreview"
         app:layout_constraintTop_toBottomOf="@+id/resultPreview" />
+
+    <TextView
+        android:id="@+id/btnBackResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/backResult"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/materialToolbar6"
+        app:layout_constraintTop_toTopOf="@+id/materialToolbar6" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

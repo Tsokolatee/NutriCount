@@ -41,6 +41,56 @@
         app:layout_constraintTop_toTopOf="@+id/materialToolbar6"
         app:srcCompat="@drawable/imglogo" />
 
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/materialToolbar7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar6">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="48dp">
+
+
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recommended_videos"
+                android:textColor="#000000"
+                android:paddingLeft="24dp"
+                android:paddingTop="16dp"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/youtubeplayer003"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                app:videoId="gC_L9qAHVJ8" />
+
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/youtubeplayer002"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                app:videoId="PvEnWsPrL4w" />
+
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/youtubeplayer001"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                app:videoId="lyg6XfP5r0M" />
+        </LinearLayout>
+    </ScrollView>
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar7"
         android:layout_width="0dp"
@@ -153,8 +203,5 @@
         app:iconSize="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/materialToolbar7" />
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

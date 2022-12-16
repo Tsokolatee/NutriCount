@@ -78,5 +78,7 @@
     <string name="progress">Progress</string>
     <string name="planner">Planner</string>
     <string name="profile">Profile</string>
+    <string name="recommended_videos">Recommended Videos</string>
+    <string name="backResult">Back</string>
 
 </resources>
